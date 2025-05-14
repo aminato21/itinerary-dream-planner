@@ -51,7 +51,7 @@ const MapComponent = ({ destination, activities }: MapComponentProps) => {
   return (
     <div className="h-full rounded-md overflow-hidden border">
       <MapContainer 
-        center={mapCenter} 
+        center={mapCenter}
         zoom={13} 
         scrollWheelZoom={false}
         style={{ height: '100%', width: '100%' }}
