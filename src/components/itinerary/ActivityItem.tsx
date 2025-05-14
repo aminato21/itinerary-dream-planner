@@ -1,6 +1,6 @@
 
 import { Activity } from "@/types";
-import { MapPin } from "lucide-react";
+import { MapPin, Coffee, Landmark, Building, Bus, ShoppingBag, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface ActivityItemProps {
@@ -10,19 +10,19 @@ interface ActivityItemProps {
 const getActivityIcon = (category: Activity["category"]) => {
   switch (category) {
     case "food":
-      return "🍽️";
+      return <Coffee className="h-5 w-5" />;
     case "attraction":
-      return "🏛️";
+      return <Landmark className="h-5 w-5" />;
     case "accommodation":
-      return "🏨";
+      return <Building className="h-5 w-5" />;
     case "transportation":
-      return "🚌";
+      return <Bus className="h-5 w-5" />;
     case "shopping":
-      return "🛍️";
+      return <ShoppingBag className="h-5 w-5" />;
     case "event":
-      return "🎭";
+      return <Calendar className="h-5 w-5" />;
     default:
-      return "📝";
+      return <MapPin className="h-5 w-5" />;
   }
 };
 
@@ -63,7 +63,7 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-2">
-          <span className="text-xl" aria-hidden="true">
+          <span className="text-primary" aria-hidden="true">
             {icon}
           </span>
           <h3 className="text-lg font-medium text-gray-900 truncate">
