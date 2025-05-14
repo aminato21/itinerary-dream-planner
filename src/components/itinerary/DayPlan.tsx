@@ -1,5 +1,7 @@
 
-import { Day } from "@/types";
+import { Day, Activity } from "@/types";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import ActivityItem from "./ActivityItem";
 
 interface DayPlanProps {
@@ -13,32 +15,39 @@ const DayPlan = ({ day }: DayPlanProps) => {
   });
 
   return (
-    <div className="rounded-lg overflow-hidden bg-[#1D1D1F] text-white">
-      <div className="p-4 pb-2">
-        <div className="text-lg font-medium">
+    <Card>
+      <CardHeader>
+        <CardTitle>
           {new Date(day.date).toLocaleDateString(undefined, {
             weekday: "long",
-            month: "short",
+            year: "numeric",
+            month: "long",
             day: "numeric",
           })}
+        </CardTitle>
+        <CardDescription>
+          {sortedActivities.length} activities planned for this day
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          {sortedActivities.length > 0 ? (
+            sortedActivities.map((activity, index) => (
+              <div key={activity.id}>
+                <ActivityItem activity={activity} />
+                {index < sortedActivities.length - 1 && (
+                  <Separator className="my-4" />
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">No activities planned for this day.</p>
+            </div>
+          )}
         </div>
-        <div className="text-sm text-white/60">
-          {sortedActivities.length} activities planned
-        </div>
-      </div>
-      
-      <div className="divide-y divide-white/10">
-        {sortedActivities.length > 0 ? (
-          sortedActivities.map((activity) => (
-            <ActivityItem key={activity.id} activity={activity} />
-          ))
-        ) : (
-          <div className="text-center py-10 text-white/60">
-            <p>No activities planned for this day.</p>
-          </div>
-        )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

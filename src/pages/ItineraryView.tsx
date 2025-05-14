@@ -2,8 +2,11 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import PageContainer from "@/components/layout/PageContainer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Calendar, MapPin, Settings } from "lucide-react";
 import { mockItineraries } from "@/data/mockData";
 import { Itinerary, Day } from "@/types";
 import DayPlan from "@/components/itinerary/DayPlan";
@@ -14,7 +17,6 @@ const ItineraryView = () => {
   const { id } = useParams<{ id: string }>();
   const [itinerary, setItinerary] = useState<Itinerary | null>(null);
   const [selectedDay, setSelectedDay] = useState<Day | null>(null);
-  const [currentTab, setCurrentTab] = useState("days");
 
   useEffect(() => {
     if (id) {
@@ -43,93 +45,82 @@ const ItineraryView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#1D1D1F] text-white">
-      <div className="max-w-lg mx-auto px-4 py-6">
-        <header className="flex items-center justify-between mb-6">
+    <PageContainer>
+      <div className="flex flex-col space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-light">{itinerary.destination.city}</h1>
-            <p className="text-sm text-white/70">
-              {new Date(itinerary.startDate).toLocaleDateString(undefined, {
-                month: "long",
-                day: "numeric",
-              })} - {new Date(itinerary.endDate).toLocaleDateString(undefined, {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
-          </div>
-          <Link to={`/edit-itinerary/${itinerary.id}`}>
-            <Button variant="ghost" size="icon" className="text-white/70 hover:text-white">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </Link>
-        </header>
-
-        <div className="mb-8 h-64">
-          <div className="rounded-lg overflow-hidden h-full">
-            <MapComponent 
-              destination={itinerary.destination} 
-              activities={selectedDay ? selectedDay.activities : []}
-            />
-          </div>
-        </div>
-        
-        <div className="mb-8">
-          <WeatherWidget 
-            destination={itinerary.destination} 
-            startDate={itinerary.startDate}
-            endDate={itinerary.endDate}
-          />
-        </div>
-        
-        <div className="mb-4">
-          <div className="flex text-center border-b border-white/20">
-            <button 
-              className={`flex-1 py-2 text-sm font-medium ${currentTab === 'days' ? 'text-white border-b-2 border-white' : 'text-white/60'}`}
-              onClick={() => setCurrentTab('days')}
-            >
-              Daily Plan
-            </button>
-            <button 
-              className={`flex-1 py-2 text-sm font-medium ${currentTab === 'overview' ? 'text-white border-b-2 border-white' : 'text-white/60'}`}
-              onClick={() => setCurrentTab('overview')}
-            >
-              Overview
-            </button>
-          </div>
-        </div>
-        
-        {currentTab === 'days' && (
-          <div>
-            <div className="flex overflow-x-auto pb-2 mb-4 scrollbar-none">
-              {itinerary.days.map((day, index) => (
-                <button 
-                  key={day.id}
-                  className={`px-4 py-2 mr-2 rounded-full whitespace-nowrap text-sm ${selectedDay?.id === day.id ? 'bg-white/20 text-white' : 'text-white/70'}`}
-                  onClick={() => setSelectedDay(day)}
-                >
-                  Day {index + 1}
-                </button>
-              ))}
+            <h1 className="text-3xl font-bold">{itinerary.title}</h1>
+            <div className="flex items-center mt-2 text-muted-foreground">
+              <MapPin className="h-4 w-4 mr-1" />
+              <span>
+                {itinerary.destination.city}, {itinerary.destination.country}
+              </span>
+              <Separator orientation="vertical" className="mx-2 h-4" />
+              <Calendar className="h-4 w-4 mr-1" />
+              <span>
+                {new Date(itinerary.startDate).toLocaleDateString()} -{" "}
+                {new Date(itinerary.endDate).toLocaleDateString()}
+              </span>
             </div>
-            
-            {selectedDay && <DayPlan day={selectedDay} />}
           </div>
-        )}
-        
-        {currentTab === 'overview' && (
-          <div className="space-y-6">
-            {itinerary.days.map((day, index) => (
-              <div key={day.id}>
-                <h2 className="text-lg font-medium mb-2">Day {index + 1}</h2>
-                <DayPlan day={day} />
+          <div className="flex gap-2">
+            <Link to={`/edit-itinerary/${itinerary.id}`}>
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Trip Overview</CardTitle>
+            <CardDescription>{itinerary.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="col-span-1 md:col-span-1">
+                <WeatherWidget 
+                  destination={itinerary.destination} 
+                  startDate={itinerary.startDate}
+                  endDate={itinerary.endDate}
+                />
               </div>
+              <div className="col-span-1 md:col-span-2 h-[300px]">
+                <MapComponent 
+                  destination={itinerary.destination} 
+                  activities={selectedDay ? selectedDay.activities : []}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="mt-6">
+          <Tabs defaultValue={itinerary.days[0]?.id || "day1"} onValueChange={(value) => {
+            const day = itinerary.days.find(d => d.id === value);
+            if (day) setSelectedDay(day);
+          }}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">Daily Itinerary</h2>
+            </div>
+            <TabsList className="mb-4 flex w-full overflow-x-auto pb-1 justify-start">
+              {itinerary.days.map((day, index) => (
+                <TabsTrigger key={day.id} value={day.id} className="min-w-20">
+                  Day {index + 1}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {itinerary.days.map((day) => (
+              <TabsContent key={day.id} value={day.id}>
+                <DayPlan day={day} />
+              </TabsContent>
             ))}
-          </div>
-        )}
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </PageContainer>
   );
 };
 
