@@ -1,2 +1,77 @@
 
-/* This file is intentionally left empty as styles are managed through Tailwind CSS */
+/* This file enhances the default Tailwind styles with custom effects */
+
+/* Glass card enhancements */
+.glass-card {
+  @apply backdrop-blur-md bg-white/60 border border-white/30 shadow-lg;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Page transitions for route changes */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Button hover effects */
+button:not(.text-destructive):hover {
+  transform: translateY(-1px);
+  transition: transform 0.2s ease;
+}
+
+/* Card hover effects */
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Shimmer effect for loading states */
+.shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* Enhanced focus states */
+:focus-visible {
+  outline: 2px solid rgba(29, 78, 216, 0.5);
+  outline-offset: 2px;
+}
+
+/* Progress bar animation */
+.animate-progress > div {
+  transition: width 0.5s ease-in-out;
+}

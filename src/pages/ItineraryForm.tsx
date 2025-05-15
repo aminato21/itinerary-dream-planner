@@ -24,6 +24,9 @@ const ItineraryForm = () => {
           destinationCity: itinerary.destination.city,
           destinationCountry: itinerary.destination.country,
           coverImage: itinerary.coverImage || "",
+          budget: "",  // Default values for new fields
+          budgetCurrency: "USD",
+          preferredTransport: "all",
         });
       }
     }
@@ -47,19 +50,25 @@ const ItineraryForm = () => {
   
   return (
     <PageContainer>
+      <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-transparent pointer-events-none" />
+      
       <motion.div
         initial="hidden"
         animate="show"
         variants={container}
+        className="relative z-10"
       >
         <motion.div variants={item} className="mb-6">
-          <Link to="/" className="inline-flex items-center text-gray-600 mb-4 hover:text-primary transition-colors">
+          <Link to="/" className="inline-flex items-center text-white mb-4 hover:text-primary transition-colors backdrop-blur-sm px-3 py-1 rounded-full bg-white/20">
             <ArrowLeft className="h-4 w-4 mr-1" />
             <span>Back to Dashboard</span>
           </Link>
-          <h1 className="text-3xl font-bold text-center">
+          <h1 className="text-4xl font-bold text-center text-white drop-shadow-md">
             {id ? "Edit Itinerary" : "Create New Itinerary"}
           </h1>
+          <p className="text-center text-white/90 mt-2 max-w-lg mx-auto">
+            Fill in the details below to {id ? "update your" : "create your personalized"} travel itinerary
+          </p>
         </motion.div>
         
         <motion.div variants={item}>

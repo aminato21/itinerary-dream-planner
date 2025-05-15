@@ -18,6 +18,9 @@ export type Itinerary = {
   userId: string;
   destination: Destination;
   coverImage?: string;
+  budget?: string;
+  budgetCurrency?: string;
+  preferredTransport?: string;
 };
 
 export type Destination = {
@@ -43,6 +46,7 @@ export type Activity = {
   endTime: string;
   location: Location;
   category: ActivityCategory;
+  transportationMethod?: TransportationMethod;
 };
 
 export type Location = {
@@ -61,6 +65,18 @@ export type ActivityCategory =
   'transportation' | 
   'shopping' | 
   'event' | 
+  'other';
+
+export type TransportationMethod =
+  'walking' |
+  'public_transit' |
+  'taxi' |
+  'rideshare' |
+  'bicycle' |
+  'car' |
+  'train' |
+  'bus' |
+  'ferry' |
   'other';
 
 // Weather types

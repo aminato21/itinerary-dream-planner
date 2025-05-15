@@ -8,10 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight, MapPin, Calendar, Image, PenLine } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Calendar, Image, PenLine, Wallet, Bus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Itinerary } from "@/types";
 import { mockItineraries } from "@/data/mockData";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type FormData = {
   title: string;
@@ -21,6 +22,9 @@ type FormData = {
   destinationCity: string;
   destinationCountry: string;
   coverImage: string;
+  budget: string;
+  budgetCurrency: string;
+  preferredTransport: string;
 };
 
 type ProgressiveItineraryFormProps = {
@@ -42,17 +46,30 @@ const ProgressiveItineraryForm = ({ initialData, itineraryId }: ProgressiveItine
     destinationCity: "",
     destinationCountry: "",
     coverImage: "",
+    budget: "",
+    budgetCurrency: "USD",
+    preferredTransport: "all",
   });
   
   // If we have initial data, set it
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData(prev => ({
+        ...prev,
+        ...initialData,
+        budget: initialData.budget || "",
+        budgetCurrency: initialData.budgetCurrency || "USD",
+        preferredTransport: initialData.preferredTransport || "all",
+      }));
     }
   }, [initialData]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   
@@ -170,6 +187,82 @@ const ProgressiveItineraryForm = ({ initialData, itineraryId }: ProgressiveItine
       ),
     },
     {
+      title: "What's your budget?",
+      description: "Set your trip budget and preferences",
+      icon: <Wallet className="h-5 w-5 text-primary" />,
+      fields: (
+        <motion.div 
+          className="space-y-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <p className="text-sm text-muted-foreground">
+            Enter your total budget and preferred transportation options
+          </p>
+          
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2 col-span-1">
+                <Label htmlFor="budget">Trip Budget *</Label>
+                <Input
+                  id="budget"
+                  name="budget"
+                  type="number"
+                  min="0"
+                  placeholder="e.g., 2000"
+                  value={formData.budget}
+                  onChange={handleChange}
+                  className="text-base"
+                  required
+                />
+              </div>
+              <div className="space-y-2 col-span-1">
+                <Label htmlFor="budgetCurrency">Currency</Label>
+                <Select 
+                  value={formData.budgetCurrency}
+                  onValueChange={(value) => handleSelectChange('budgetCurrency', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD ($)</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                    <SelectItem value="JPY">JPY (¥)</SelectItem>
+                    <SelectItem value="CAD">CAD ($)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="preferredTransport">Preferred Transportation</Label>
+              <Select 
+                value={formData.preferredTransport}
+                onValueChange={(value) => handleSelectChange('preferredTransport', value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select preferred transport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Options</SelectItem>
+                  <SelectItem value="public">Public Transport</SelectItem>
+                  <SelectItem value="car">Car/Taxi</SelectItem>
+                  <SelectItem value="walking">Walking</SelectItem>
+                  <SelectItem value="budget">Budget-friendly Options</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                This will help suggest appropriate transportation between attractions
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      ),
+    },
+    {
       title: "Give it a look",
       description: "Add a cover image for your trip (optional)",
       icon: <Image className="h-5 w-5 text-primary" />,
@@ -258,6 +351,15 @@ const ProgressiveItineraryForm = ({ initialData, itineraryId }: ProgressiveItine
       return;
     }
     
+    if (currentStep === 3 && !formData.budget) {
+      toast({
+        title: "Missing information",
+        description: "Please provide a budget for your trip",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (currentStep < steps.length - 1) {
       setDirection(1);
       setCurrentStep((prev) => prev + 1);
@@ -278,7 +380,7 @@ const ProgressiveItineraryForm = ({ initialData, itineraryId }: ProgressiveItine
     
     try {
       // Validate form
-      if (!formData.title || !formData.startDate || !formData.endDate || !formData.destinationCity || !formData.destinationCountry) {
+      if (!formData.title || !formData.startDate || !formData.endDate || !formData.destinationCity || !formData.destinationCountry || !formData.budget) {
         throw new Error("Please fill in all required fields");
       }
       
@@ -358,7 +460,7 @@ const ProgressiveItineraryForm = ({ initialData, itineraryId }: ProgressiveItine
         </div>
       </div>
 
-      <Card className="border-none shadow-lg">
+      <Card className="border-none shadow-lg glass-card backdrop-blur-md">
         <CardContent className="pt-6">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -382,11 +484,16 @@ const ProgressiveItineraryForm = ({ initialData, itineraryId }: ProgressiveItine
             variant="outline"
             onClick={() => (currentStep === 0 ? navigate(-1) : prevStep())}
             disabled={isSubmitting}
+            className="backdrop-blur-sm bg-white/10 border-white/20 hover:bg-white/20"
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             {currentStep === 0 ? "Cancel" : "Previous"}
           </Button>
-          <Button onClick={nextStep} disabled={isSubmitting}>
+          <Button 
+            onClick={nextStep} 
+            disabled={isSubmitting}
+            className="backdrop-blur-sm bg-primary/80 hover:bg-primary shadow-md"
+          >
             {currentStep < steps.length - 1 ? (
               <>
                 Next
