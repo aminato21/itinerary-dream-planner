@@ -21,6 +21,16 @@ export type Itinerary = {
   budget?: string;
   budgetCurrency?: string;
   preferredTransport?: string;
+  transportationDetails?: TransportationDetails;
+};
+
+export type TransportationDetails = {
+  totalCost: number;
+  dailyCosts: {
+    dayId: string;
+    cost: number;
+    methods: TransportationMethod[];
+  }[];
 };
 
 export type Destination = {
@@ -36,6 +46,7 @@ export type Day = {
   id: string;
   date: string;
   activities: Activity[];
+  transportationCost?: number;
 };
 
 export type Activity = {
@@ -47,6 +58,11 @@ export type Activity = {
   location: Location;
   category: ActivityCategory;
   transportationMethod?: TransportationMethod;
+  cost?: {
+    amount: number;
+    currency: string;
+  };
+  details?: string[];
 };
 
 export type Location = {
