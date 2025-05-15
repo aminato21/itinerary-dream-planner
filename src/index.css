@@ -83,5 +83,51 @@
 
   body {
     @apply bg-background text-foreground;
+    background-image: url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
   }
 }
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-lg;
+  }
+  
+  .glass-card {
+    @apply bg-white/60 backdrop-blur-md border border-white/30 shadow-lg;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/40 border border-white/10 shadow-lg;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
