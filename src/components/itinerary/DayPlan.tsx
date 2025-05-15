@@ -3,7 +3,7 @@ import { Day, Activity, TransportationMethod } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import ActivityItem from "./ActivityItem";
-import { Bus, Car, TrainFront, Plane, TramFront, Bicycle, Taxi } from "lucide-react";
+import { Bus, Car, Train as TrainFront, Plane, Train as TramFront } from "lucide-react";
 
 interface DayPlanProps {
   day: Day;
@@ -164,11 +164,11 @@ function getTransportIcon(method: TransportationMethod) {
     case 'public_transit':
       return <TramFront size={16} className="text-blue-600" />;
     case 'taxi':
-      return <Taxi size={16} className="text-yellow-600" />;
+      return <Car size={16} className="text-yellow-600" />;
     case 'rideshare':
       return <Car size={16} className="text-purple-600" />;
     case 'bicycle':
-      return <Bicycle size={16} className="text-green-600" />;
+      return <span className="text-green-600">🚲</span>;
     case 'car':
       return <Car size={16} className="text-red-600" />;
     case 'train':
