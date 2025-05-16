@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -121,18 +120,18 @@ const ItineraryView = () => {
       >
         <motion.div variants={item} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <Link to="/" className="inline-flex items-center text-gray-600 mb-2 hover:text-primary transition-colors">
+            <Link to="/" className="inline-flex items-center text-gray-400 mb-2 hover:text-primary transition-colors">
               <ArrowLeft className="h-4 w-4 mr-1" />
               <span>Back to Dashboard</span>
             </Link>
-            <h1 className="text-3xl font-bold">{itinerary.title}</h1>
+            <h1 className="text-3xl font-bold text-gradient">{itinerary.title}</h1>
             <div className="flex items-center mt-2 text-muted-foreground">
-              <MapPin className="h-4 w-4 mr-1" />
+              <MapPin className="h-4 w-4 mr-1 text-primary" />
               <span>
                 {itinerary.destination.city}, {itinerary.destination.country}
               </span>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              <Calendar className="h-4 w-4 mr-1" />
+              <Separator orientation="vertical" className="mx-2 h-4 bg-white/20" />
+              <Calendar className="h-4 w-4 mr-1 text-primary" />
               <span>
                 {new Date(itinerary.startDate).toLocaleDateString()} -{" "}
                 {new Date(itinerary.endDate).toLocaleDateString()}
@@ -140,12 +139,12 @@ const ItineraryView = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="glass border-white/30 hover:bg-white/30" onClick={handlePrintItinerary}>
+            <Button variant="outline" size="sm" className="glass border-white/30 hover:bg-white/10" onClick={handlePrintItinerary}>
               <span className="h-4 w-4 mr-2">📄</span>
               Print
             </Button>
             <Link to={`/edit-itinerary/${itinerary.id}`}>
-              <Button variant="outline" size="sm" className="glass border-white/30 hover:bg-white/30">
+              <Button variant="outline" size="sm" className="glass border-white/30 hover:bg-white/10">
                 <Settings className="h-4 w-4 mr-2" />
                 Edit
               </Button>
@@ -154,10 +153,10 @@ const ItineraryView = () => {
         </motion.div>
 
         <motion.div variants={item}>
-          <Card className="glass-card overflow-hidden border-white/30">
+          <Card className="glass-card overflow-hidden border-white/10">
             <CardHeader>
-              <CardTitle>Trip Overview</CardTitle>
-              <CardDescription>{itinerary.description}</CardDescription>
+              <CardTitle className="text-white">Trip Overview</CardTitle>
+              <CardDescription className="text-gray-300">{itinerary.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -169,34 +168,34 @@ const ItineraryView = () => {
                   />
                   
                   {/* Budget and Transportation Section */}
-                  <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-white/30 shadow-sm">
-                    <h3 className="font-medium flex items-center gap-1.5 mb-2">
+                  <div className="glass border border-white/10 rounded-lg p-4 shadow-sm">
+                    <h3 className="font-medium flex items-center gap-1.5 mb-2 text-white">
                       <Wallet className="h-4 w-4 text-primary" />
                       Budget Overview
                     </h3>
                     <div className="space-y-1.5 text-sm">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between text-gray-300">
                         <span>Total Budget:</span>
-                        <span className="font-medium">{itinerary.budget} {itinerary.budgetCurrency}</span>
+                        <span className="font-medium text-white">{itinerary.budget} {itinerary.budgetCurrency}</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between text-gray-300">
                         <span>Transportation Cost:</span>
-                        <span className="font-medium">{transportationCost} {itinerary.budgetCurrency}</span>
+                        <span className="font-medium text-white">{transportationCost} {itinerary.budgetCurrency}</span>
                       </div>
-                      <Separator className="my-1.5" />
-                      <div className="flex justify-between">
+                      <Separator className="my-1.5 bg-white/20" />
+                      <div className="flex justify-between text-gray-300">
                         <span>Remaining for Activities:</span>
-                        <span className="font-medium">{remainingBudget} {itinerary.budgetCurrency}</span>
+                        <span className="font-medium text-primary">{remainingBudget} {itinerary.budgetCurrency}</span>
                       </div>
                     </div>
                     
-                    <h3 className="font-medium flex items-center gap-1.5 mt-4 mb-2">
+                    <h3 className="font-medium flex items-center gap-1.5 mt-4 mb-2 text-white">
                       <Bus className="h-4 w-4 text-primary" />
                       Transportation
                     </h3>
-                    <div className="text-sm">
+                    <div className="text-sm text-gray-300">
                       <p className="mb-1">Primary: {getTransportName(itinerary.preferredTransport)}</p>
-                      <p className="text-xs text-muted-foreground">Transportation costs are automatically calculated based on your activities and preferences.</p>
+                      <p className="text-xs text-gray-400">Transportation costs are automatically calculated based on your activities and preferences.</p>
                     </div>
                   </div>
                 </div>
@@ -217,16 +216,16 @@ const ItineraryView = () => {
             if (day) setSelectedDay(day);
           }}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">Daily Itinerary</h2>
+              <h2 className="text-2xl font-bold text-white">Daily Itinerary</h2>
             </div>
-            <TabsList className="mb-4 flex w-full overflow-x-auto pb-1 justify-start glass border-white/30 no-scrollbar">
+            <TabsList className="mb-4 flex w-full overflow-x-auto pb-1 justify-start glass border-white/10 no-scrollbar">
               {itinerary.days.map((day, index) => (
-                <TabsTrigger key={day.id} value={day.id} className="min-w-20">
+                <TabsTrigger key={day.id} value={day.id} className="min-w-20 data-[state=active]:bg-primary/20 data-[state=active]:text-white">
                   Day {index + 1}
                 </TabsTrigger>
               ))}
             </TabsList>
-            <div className="glass-card rounded-lg p-4 border-white/30">
+            <div className="glass-card rounded-lg p-4 border-white/10">
               {itinerary.days.map((day) => (
                 <TabsContent key={day.id} value={day.id}>
                   <DayPlan day={day} preferredTransport={itinerary.preferredTransport} />

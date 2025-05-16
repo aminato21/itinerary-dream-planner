@@ -6,7 +6,7 @@ import PageContainer from "@/components/layout/PageContainer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CalendarCheck, Plus, Search } from "lucide-react";
+import { CalendarCheck, Plus, Search, Map, Clock } from "lucide-react";
 import { mockItineraries } from "@/data/mockData";
 import { motion } from "framer-motion";
 
@@ -59,38 +59,38 @@ const Dashboard = () => {
         className="flex flex-col space-y-8"
       >
         <motion.div variants={item} className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.name}!</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gradient">Welcome, {user?.name}!</h1>
           <p className="text-muted-foreground">
             Manage your travel plans and create new adventures.
           </p>
         </motion.div>
         
         <motion.div variants={item} className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="glass-card overflow-hidden">
+          <Card className="glass-card border-white/10 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Itineraries</CardTitle>
-              <CalendarCheck className="h-4 w-4 text-primary" />
+              <Map className="h-5 w-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockItineraries.length}</div>
+              <div className="text-3xl font-bold text-gradient">{mockItineraries.length}</div>
             </CardContent>
           </Card>
-          <Card className="glass-card overflow-hidden">
+          <Card className="glass-card border-white/10 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Upcoming Trips</CardTitle>
-              <CalendarCheck className="h-4 w-4 text-primary" />
+              <CalendarCheck className="h-5 w-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{upcomingTrips.length}</div>
+              <div className="text-3xl font-bold text-gradient">{upcomingTrips.length}</div>
             </CardContent>
           </Card>
-          <Card className="glass-card overflow-hidden">
+          <Card className="glass-card border-white/10 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Trips In Progress</CardTitle>
-              <CalendarCheck className="h-4 w-4 text-primary" />
+              <Clock className="h-5 w-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{tripsInProgress.length}</div>
+              <div className="text-3xl font-bold text-gradient">{tripsInProgress.length}</div>
             </CardContent>
           </Card>
         </motion.div>
@@ -124,32 +124,33 @@ const Dashboard = () => {
               filteredItineraries.map((itinerary) => (
                 <motion.div key={itinerary.id} variants={item}>
                   <Link to={`/itinerary/${itinerary.id}`}>
-                    <Card className="glass-card overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02]">
+                    <Card className="glass-card overflow-hidden h-full hover-card border-white/10">
                       <div className="aspect-video w-full relative overflow-hidden">
                         <img
                           src={itinerary.coverImage || "https://images.unsplash.com/photo-1488085061387-422e29b40080?q=80&w=1000"}
                           alt={itinerary.title}
                           className="object-cover w-full h-full"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                       </div>
                       <CardHeader>
-                        <CardTitle className="text-xl font-bold">{itinerary.title}</CardTitle>
-                        <CardDescription className="text-sm font-medium">
+                        <CardTitle className="text-xl font-bold text-white">{itinerary.title}</CardTitle>
+                        <CardDescription className="text-sm font-medium text-gray-300">
                           {itinerary.destination.city}, {itinerary.destination.country}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-sm text-gray-400 line-clamp-2">
                           {itinerary.description}
                         </p>
                       </CardContent>
                       <CardFooter className="flex justify-between">
-                        <p className="text-xs text-gray-500 flex items-center">
-                          <CalendarCheck className="h-3 w-3 mr-1" />
+                        <p className="text-xs text-gray-400 flex items-center">
+                          <CalendarCheck className="h-3 w-3 mr-1 text-primary" />
                           {new Date(itinerary.startDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})} - 
                           {new Date(itinerary.endDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-400">
                           {itinerary.days.length} days
                         </p>
                       </CardFooter>
@@ -158,7 +159,7 @@ const Dashboard = () => {
                 </motion.div>
               ))
             ) : (
-              <motion.div variants={item} className="col-span-full glass-card rounded-lg text-center py-10">
+              <motion.div variants={item} className="col-span-full glass-card rounded-lg text-center py-10 border-white/10">
                 <p className="text-muted-foreground">No itineraries found. Create one now!</p>
                 <Link to="/create-itinerary" className="mt-4 inline-block">
                   <Button variant="outline" className="glass border-white/30 hover:bg-white/30">
